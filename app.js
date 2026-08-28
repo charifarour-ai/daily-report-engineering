@@ -1,0 +1,22 @@
+const state = { reports: [], editingId: null };
+const $ = selector => document.querySelector(selector);
+const dialog = $('#reportDialog');
+const form = $('#reportForm');
+const thaiMonths = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+const dateText = date => { const d = new Date(`${date}T00:00:00`); return { day: String(d.getDate()).padStart(2, '0'), month: thaiMonths[d.getMonth()], full: d.toLocaleDateString('th-TH', { day:'numeric', month:'long', year:'numeric' }) }; };
+const escapeHtml = value => String(value || '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]));
+function render() {
+  const query = $('#searchInput').value.toLowerCase(); const status = $('#statusFilter').value;
+  const reports = state.reports.filter(r => (!query || `${r.project} ${r.location} ${r.workDone}`.toLowerCase().includes(query)) && (status === 'all' || r.status === status));
+  $('#totalMetric').textContent = state.reports.length; $('#progressMetric').textContent = state.reports.filter(r => r.status === 'in-progress').length; $('#completeMetric').textContent = state.reports.filter(r => r.status === 'completed').length;
+  const today = new Date().toISOString().slice(0,10); $('#peopleMetric').innerHTML = `${state.reports.filter(r => r.date === today).reduce((sum, r) => sum + Number(r.manpower || 0), 0)} <small>คน</small>`;
+  $('#reportList').innerHTML = reports.length ? reports.map(r => { const d = dateText(r.date); return `<article class="report-card"><div class="report-date"><strong>${d.day}</strong><span>${d.month} ${new Date(`${r.date}T00:00:00`).getFullYear()+543}</span></div><div class="report-info"><h3>${escapeHtml(r.project)}</h3><p>${escapeHtml(r.workDone)}</p><small>${escapeHtml(r.location || 'ไม่ได้ระบุสถานที่')} · ${escapeHtml(r.supervisor)}</small></div><div class="report-side"><span class="badge ${r.status}">${r.status === 'completed' ? 'เสร็จสิ้น' : r.status === 'planned' ? 'วางแผน' : 'กำลังดำเนินการ'}</span><div class="bar"><i style="width:${Math.min(100, Number(r.progress)||0)}%"></i></div><strong>${Number(r.progress)||0}%</strong></div></article>`; }).join('') : '<div class="empty">ไม่พบรายงานที่ตรงกับเงื่อนไข</div>';
+}
+async function loadReports() { const response = await fetch('/api/reports'); state.reports = await response.json(); render(); }
+function openForm(report) { state.editingId = report?.id || null; $('#formTitle').textContent = report ? 'แก้ไขรายงานประจำวัน' : 'สร้างรายงานประจำวัน'; form.reset(); form.date.value = report?.date || new Date().toISOString().slice(0,10); if (report) Object.keys(report).forEach(key => { if (form[key]) form[key].value = report[key]; }); dialog.showModal(); }
+function toast(message) { const el = $('#toast'); el.textContent = message; el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 2500); }
+form.addEventListener('submit', async event => { event.preventDefault(); const data = Object.fromEntries(new FormData(form)); data.progress = Number(data.progress); data.manpower = Number(data.manpower); const endpoint = state.editingId ? `/api/reports/${state.editingId}` : '/api/reports'; const response = await fetch(endpoint, { method: state.editingId ? 'PATCH' : 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(data) }); if (!response.ok) { const error = await response.json(); return toast(error.error || 'บันทึกไม่สำเร็จ'); } dialog.close(); await loadReports(); toast(state.editingId ? 'อัปเดตรายงานแล้ว' : 'บันทึกรายงานแล้ว'); });
+$('#newReportBtn').addEventListener('click', () => openForm());
+$('#exportBtn').addEventListener('click', () => window.print());
+$('#logoutBtn').addEventListener('click', () => { if (window.confirm('ต้องการออกจากหน้า Daily Report หรือไม่?')) window.location.href = 'about:blank'; });
+$('#closeDialog').addEventListener('click', () => dialog.close()); $('#cancelBtn').addEventListener('click', () => dialog.close()); $('#searchInput').addEventListener('input', render); $('#statusFilter').addEventListener('change', render); $('#todayLabel').textContent = dateText(new Date().toISOString().slice(0,10)).full; loadReports();

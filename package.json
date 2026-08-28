@@ -1,0 +1,9 @@
+{
+  "name": "daily-report-engineering",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Daily engineering report application",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

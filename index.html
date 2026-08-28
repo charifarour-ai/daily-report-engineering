@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily Report | Engineering</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-mark">DR</span><span><strong>Daily Report</strong><small>Engineering Hub</small></span></div>
+      <nav><a class="active" href="#dashboard"><span>▦</span> ภาพรวมโครงการ</a><a href="#reports"><span>▤</span> รายงานประจำวัน</a></nav>
+      <div class="sidebar-foot"><div class="status-dot"></div><div><small>ระบบพร้อมใช้งาน</small><strong>Local workspace</strong></div></div>
+      <button class="logout-button" id="logoutBtn" type="button"><span>↪</span> ออกจากระบบ</button>
+    </aside>
+    <main class="main-content">
+      <header class="topbar"><div><p class="eyebrow">FIELD OPERATIONS / 2026</p><h1>สวัสดี, วิศวกร</h1></div><div class="top-actions"><button class="export-button" id="exportBtn" type="button"><span>⇩</span> ส่งออก PDF</button><button class="primary" id="newReportBtn">＋ สร้างรายงานวันนี้</button></div></header>
+      <section id="dashboard" class="dashboard">
+        <div class="hero-panel"><div><span class="label">รายงานล่าสุด</span><h2>ควบคุมงานหน้างาน<br><em>ให้เดินหน้าเสมอ</em></h2><p>บันทึกความคืบหน้า ปัญหา และแผนงานวันถัดไปไว้ในที่เดียว</p></div><div class="hero-date"><strong id="todayLabel"></strong><span>WORK LOG</span></div></div>
+        <div class="metrics"><article><span class="metric-icon orange">◎</span><div><small>รายงานทั้งหมด</small><strong id="totalMetric">0</strong></div></article><article><span class="metric-icon blue">↗</span><div><small>กำลังดำเนินการ</small><strong id="progressMetric">0</strong></div></article><article><span class="metric-icon green">✓</span><div><small>ปิดงานแล้ว</small><strong id="completeMetric">0</strong></div></article><article><span class="metric-icon violet">♧</span><div><small>กำลังคนวันนี้</small><strong id="peopleMetric">0 <small>คน</small></strong></div></article></div>
+        <div class="section-head" id="reports"><div><span class="label">ACTIVITY LOG</span><h2>รายงานการปฏิบัติงาน</h2></div><div class="filters"><input id="searchInput" placeholder="ค้นหาโครงการ..." /><select id="statusFilter"><option value="all">ทุกสถานะ</option><option value="in-progress">กำลังดำเนินการ</option><option value="completed">เสร็จสิ้น</option><option value="planned">วางแผน</option></select></div></div>
+        <div class="report-list" id="reportList"><div class="empty">กำลังโหลดรายงาน...</div></div>
+      </section>
+    </main>
+  </div>
+  <dialog id="reportDialog"><form method="dialog" id="reportForm"><div class="modal-head"><div><span class="label">NEW ENTRY</span><h2 id="formTitle">สร้างรายงานประจำวัน</h2></div><button type="button" class="close" id="closeDialog">×</button></div><div class="form-grid"><label>วันที่<input required type="date" name="date" /></label><label>สถานะ<select name="status"><option value="in-progress">กำลังดำเนินการ</option><option value="completed">เสร็จสิ้น</option><option value="planned">วางแผน</option></select></label><label class="wide">ชื่อโครงการ<input required name="project" placeholder="เช่น Prasat Thong Osot BESS" /></label><label>สถานที่ปฏิบัติงาน<input name="location" placeholder="อาคาร / ชั้น / พื้นที่" /></label><label>ผู้ควบคุมงาน<input required name="supervisor" placeholder="ชื่อวิศวกร" /></label><label>สภาพอากาศ<select name="weather"><option>แดดออก</option><option>มีเมฆ</option><option>ฝนตก</option><option>ฝนตกหนัก</option></select></label><label>ความคืบหน้า (%)<input type="number" name="progress" min="0" max="100" value="0" /></label><label>กำลังคน (คน)<input type="number" name="manpower" min="0" value="0" /></label><label class="wide">งานที่ดำเนินการวันนี้<textarea required name="workDone" rows="3" placeholder="ระบุรายละเอียดงานและอุปกรณ์ที่เกี่ยวข้อง"></textarea></label><label class="wide">ความปลอดภัย / เหตุการณ์<textarea name="safety" rows="2" placeholder="การตรวจ PPE, Toolbox Talk, อุบัติเหตุ"></textarea></label><label class="wide">ปัญหาและอุปสรรค<textarea name="issues" rows="2"></textarea></label><label class="wide">แผนงานวันถัดไป<textarea required name="tomorrow" rows="2"></textarea></label></div><div class="form-actions"><button type="button" class="secondary" id="cancelBtn">ยกเลิก</button><button class="primary" type="submit">บันทึกรายงาน</button></div></form></dialog>
+  <div id="toast" class="toast"></div><script src="/app.js"></script>
+</body>
+</html>

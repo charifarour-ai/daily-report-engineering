@@ -1,0 +1,34 @@
+[
+  {
+    "id": "rpt-001",
+    "date": "2026-08-28",
+    "project": "Prasat Thong Osot BESS",
+    "location": "อาคารผลิตยา ลำลูกกา",
+    "supervisor": "ชาริฟ",
+    "weather": "แดดออก",
+    "status": "in-progress",
+    "workDone": "ติดตั้งตู้ Battery Rack ชุดที่ 3 และเดินสาย DC เข้าตู้ Combiner",
+    "progress": 68,
+    "manpower": 8,
+    "safety": "ตรวจ PPE และทำ Toolbox Talk ก่อนเริ่มงาน ไม่มีอุบัติเหตุ",
+    "issues": "รอทดสอบ insulation resistance หลังผู้รับเหมาหลักคืนพื้นที่",
+    "tomorrow": "ทดสอบสาย DC และติดป้ายหมายเลขอุปกรณ์ตาม As-built",
+    "createdAt": "2026-08-28T08:30:00.000Z"
+  },
+  {
+    "id": "rpt-002",
+    "date": "2026-08-27",
+    "project": "QNITY Electrical System",
+    "location": "ห้อง MDB ชั้น 1",
+    "supervisor": "ชาริฟ",
+    "weather": "ฝนตก",
+    "status": "completed",
+    "workDone": "ตรวจสอบ polarity และ torque จุดต่อสายเมนของ MDB-01",
+    "progress": 100,
+    "manpower": 5,
+    "safety": "กั้นพื้นที่และใช้ LOTO ครบถ้วน",
+    "issues": "ไม่พบปัญหา",
+    "tomorrow": "จัดทำ punch list และส่งผลทดสอบให้ที่ปรึกษา",
+    "createdAt": "2026-08-27T09:00:00.000Z"
+  }
+]
