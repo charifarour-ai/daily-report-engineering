@@ -10,6 +10,10 @@
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
+  <section class="login-screen" id="loginScreen">
+    <div class="login-art"><span class="brand-mark">DR</span><p class="eyebrow">FIELD OPERATIONS / 2026</p><h1>รายงานหน้างาน<br><em>ที่ทีมไว้ใจ</em></h1><p>รวมความคืบหน้า ความปลอดภัย และแผนงานของทุกโครงการไว้ในระบบเดียว</p><div class="login-stamp">ENGINEERING<br>WORKSPACE</div></div>
+    <form class="login-panel" id="loginForm"><span class="label">SECURE ACCESS</span><h2>เข้าสู่ระบบ</h2><p>ใช้บัญชีเฉพาะบุคคลเพื่อบันทึกและติดตามรายงาน</p><label>ชื่อผู้ใช้<input required name="username" autocomplete="username" placeholder="เช่น somchai" /></label><label>รหัสผ่าน<input required type="password" name="password" autocomplete="current-password" placeholder="••••••••" /></label><button class="primary" type="submit">เข้าสู่ระบบ <span>→</span></button><div class="login-error" id="loginError"></div></form>
+  </section>
   <div class="app-shell">
     <aside class="sidebar">
       <div class="brand"><span class="brand-mark">DR</span><span><strong>Daily Report</strong><small>Engineering Hub</small></span></div>
@@ -18,7 +22,7 @@
       <button class="logout-button" id="logoutBtn" type="button"><span>↪</span> ออกจากระบบ</button>
     </aside>
     <main class="main-content">
-      <header class="topbar"><div><p class="eyebrow">FIELD OPERATIONS / 2026</p><h1>สวัสดี, วิศวกร</h1></div><div class="top-actions"><button class="export-button" id="exportBtn" type="button"><span>⇩</span> ส่งออก PDF</button><button class="primary" id="newReportBtn">＋ สร้างรายงานวันนี้</button></div></header>
+      <header class="topbar"><div><p class="eyebrow">FIELD OPERATIONS / 2026</p><h1>สวัสดี, <span id="currentUserName">วิศวกร</span></h1></div><div class="top-actions"><button class="export-button" id="exportBtn" type="button"><span>⇩</span> ส่งออก PDF</button><button class="primary" id="newReportBtn">＋ สร้างรายงานวันนี้</button></div></header>
       <section id="dashboard" class="dashboard">
         <div class="hero-panel"><div><span class="label">รายงานล่าสุด</span><h2>ควบคุมงานหน้างาน<br><em>ให้เดินหน้าเสมอ</em></h2><p>บันทึกความคืบหน้า ปัญหา และแผนงานวันถัดไปไว้ในที่เดียว</p></div><div class="hero-date"><strong id="todayLabel"></strong><span>WORK LOG</span></div></div>
         <div class="metrics"><article><span class="metric-icon orange">◎</span><div><small>รายงานทั้งหมด</small><strong id="totalMetric">0</strong></div></article><article><span class="metric-icon blue">↗</span><div><small>กำลังดำเนินการ</small><strong id="progressMetric">0</strong></div></article><article><span class="metric-icon green">✓</span><div><small>ปิดงานแล้ว</small><strong id="completeMetric">0</strong></div></article><article><span class="metric-icon violet">♧</span><div><small>กำลังคนวันนี้</small><strong id="peopleMetric">0 <small>คน</small></strong></div></article></div>

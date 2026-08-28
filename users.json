@@ -1,0 +1,10 @@
+[
+  {
+    "id": "usr-admin",
+    "username": "admin",
+    "displayName": "ผู้ดูแลระบบ",
+    "role": "admin",
+    "salt": "186f4b613626a162d7470b520c3f4c79",
+    "passwordHash": "6ade99cbee27872ed8ae55d5e917550650072ecd54a385c871106b848214018e040cd773bc85142984b9ffd19c6448cf698842bd0cb502ba6afad59d13a3274c"
+  }
+]

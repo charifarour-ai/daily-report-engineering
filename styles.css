@@ -20,6 +20,25 @@ dialog { border: 0; border-radius: 14px; padding: 0; width: min(720px, calc(100%
 @keyframes rise { from { opacity: 0; transform: translateY(9px); } to { opacity: 1; transform: translateY(0); } }
 @media (max-width: 800px) { .sidebar { width: 70px; padding: 22px 10px; } .brand { margin: 0 auto 54px; } .brand > span:last-child, .sidebar a:not(.active), .sidebar-foot div:not(.status-dot) { display: none; } .sidebar a.active { padding: 12px; text-align: center; } .main-content { padding: 26px 18px; } .topbar { align-items: flex-start; flex-direction: column; } .topbar .primary { width: 100%; } .hero-panel { padding: 28px 25px; min-height: 230px; } .hero-panel h2 { font-size: 30px; } .hero-date { display: none; } .metrics { grid-template-columns: 1fr 1fr; margin-bottom: 38px; } .metrics article { padding: 16px 12px; } .report-card { grid-template-columns: 66px 1fr; padding: 17px; gap: 12px; } .report-side { grid-column: 2; } .report-side .delete-button { margin-left: auto; } .section-head { align-items: flex-start; flex-direction: column; } .filters { width: 100%; } .filters input { flex: 1; min-width: 0; } .form-grid { grid-template-columns: 1fr; padding: 20px; } .modal-head, .form-actions { padding-left: 20px; padding-right: 20px; } .wide { grid-column: auto; } }
 .top-actions { display: flex; align-items: center; gap: 10px; }
+.login-screen { min-height: 100vh; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(360px, .95fr); background: #f3f6f4; }
+.login-screen.hidden { display: none; }
+.login-art { padding: clamp(40px, 8vw, 110px); background: linear-gradient(135deg, #132a35, #28515a); color: #fff; position: relative; overflow: hidden; }
+.login-art::after { content: ''; position: absolute; width: 540px; height: 540px; right: -240px; bottom: -240px; border: 1px solid #a7c7bd40; border-radius: 50%; box-shadow: 0 0 0 32px #a7c7bd10, 0 0 0 72px #a7c7bd08; }
+.login-art .brand-mark { margin-bottom: 28vh; }
+.login-art h1 { font: 600 clamp(42px, 5vw, 72px)/1.04 'Space Grotesk'; margin: 16px 0 20px; letter-spacing: -1px; }
+.login-art h1 em { color: #f6a16f; font-style: normal; }
+.login-art > p:not(.eyebrow) { color: #b8c8c9; max-width: 390px; line-height: 1.8; }
+.login-stamp { position: absolute; left: clamp(40px, 8vw, 110px); bottom: 42px; border-left: 2px solid var(--orange); padding-left: 12px; color: #9eb5b8; font: 600 10px/1.6 'Space Grotesk'; letter-spacing: 2px; z-index: 1; }
+.login-panel { align-self: center; width: min(410px, calc(100% - 56px)); margin: auto; padding: 42px; background: #fff; border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 24px 60px #19333e14; animation: rise .5s ease both; }
+.login-panel h2 { font: 600 30px 'Space Grotesk'; margin: 12px 0 6px; }
+.login-panel > p { color: var(--muted); font-size: 13px; margin: 0 0 30px; }
+.login-panel label { display: block; color: #64737a; font-size: 12px; margin-top: 16px; }
+.login-panel input { display: block; width: 100%; margin-top: 7px; border: 1px solid #dce3e5; border-radius: 8px; padding: 12px; font: 14px 'IBM Plex Sans Thai'; outline: none; }
+.login-panel input:focus { border-color: #5e9b91; box-shadow: 0 0 0 3px #5e9b911c; }
+.login-panel .primary { width: 100%; margin-top: 26px; display: flex; justify-content: space-between; align-items: center; }
+.login-panel .primary span { font-size: 21px; }
+.login-error { color: #c65243; font-size: 12px; min-height: 18px; margin-top: 12px; }
+.app-shell.locked { display: none; }
 .export-button, .logout-button { border: 1px solid transparent; border-radius: 8px; cursor: pointer; font: 600 13px 'IBM Plex Sans Thai'; transition: .2s ease; }
 .export-button { background: #fff; border-color: var(--line); color: #48616b; padding: 11px 15px; }
 .export-button:hover { border-color: #a9c3bd; color: var(--ink); transform: translateY(-2px); }
@@ -36,3 +55,4 @@ dialog { border: 0; border-radius: 14px; padding: 0; width: min(720px, calc(100%
 	.report-card:hover { transform: none; }
 }
 @media (max-width: 800px) { .top-actions { width: 100%; } .top-actions .export-button { flex: 1; } .top-actions .primary { flex: 2; } .logout-button { font-size: 0; text-align: center; } .logout-button span { font-size: 20px; margin: 0; } }
+@media (max-width: 800px) { .login-screen { display: block; } .login-art { min-height: 38vh; padding: 28px; } .login-art .brand-mark { margin-bottom: 8vh; } .login-art h1 { font-size: 40px; } .login-stamp { display: none; } .login-panel { width: calc(100% - 36px); margin: -30px auto 0; position: relative; padding: 30px 24px; } }
