@@ -5,8 +5,8 @@ const crypto = require('crypto');
 
 const PORT = process.env.PORT || 3030;
 const root = __dirname;
-const dataFile = path.join(root, 'data', 'reports.json');
-const publicDir = path.join(root, 'public');
+const dataFile = path.join(root, 'reports.json');
+const publicDir = root;
 const mimeTypes = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.json': 'application/json; charset=utf-8' };
 
 function readReports() { return JSON.parse(fs.readFileSync(dataFile, 'utf8')); }
