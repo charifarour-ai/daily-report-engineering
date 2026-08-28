@@ -86,7 +86,8 @@ const server = http.createServer(async (req, res) => {
   }
   const match = url.pathname.match(/^\/api\/reports\/([^/]+)$/);
   if (match && (req.method === 'PATCH' || req.method === 'DELETE')) {
-    if (!requireUser(req, res)) return;
+    const authenticatedUser = requireUser(req, res); if (!authenticatedUser) return;
+    if (req.method === 'DELETE' && authenticatedUser.role !== 'admin') return sendJson(res, 403, { error: 'เฉพาะผู้ดูแลระบบเท่านั้นที่ลบรายงานได้' });
     const reports = readReports(); const index = reports.findIndex(report => report.id === match[1]);
     if (index === -1) return sendJson(res, 404, { error: 'ไม่พบรายงาน' });
     if (req.method === 'DELETE') { const removed = reports.splice(index, 1)[0]; saveReports(reports); return sendJson(res, 200, removed); }
