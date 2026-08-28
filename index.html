@@ -12,7 +12,7 @@
 <body>
   <section class="login-screen" id="loginScreen">
     <div class="login-art"><span class="brand-mark">DR</span><p class="eyebrow">FIELD OPERATIONS / 2026</p><h1>รายงานหน้างาน<br><em>ที่ทีมไว้ใจ</em></h1><p>รวมความคืบหน้า ความปลอดภัย และแผนงานของทุกโครงการไว้ในระบบเดียว</p><div class="login-stamp">ENGINEERING<br>WORKSPACE</div></div>
-    <form class="login-panel" id="loginForm"><span class="label">SECURE ACCESS</span><h2>เข้าสู่ระบบ</h2><p>ใช้บัญชีเฉพาะบุคคลเพื่อบันทึกและติดตามรายงาน</p><label>ชื่อผู้ใช้<input required name="username" autocomplete="username" placeholder="เช่น somchai" /></label><label>รหัสผ่าน<input required type="password" name="password" autocomplete="current-password" placeholder="••••••••" /></label><button class="primary" type="submit">เข้าสู่ระบบ <span>→</span></button><div class="login-error" id="loginError"></div></form>
+    <form class="login-panel" id="loginForm"><span class="label">SECURE ACCESS</span><h2 id="loginTitle">เข้าสู่ระบบ</h2><p id="loginDescription">ใช้บัญชีเฉพาะบุคคลเพื่อบันทึกและติดตามรายงาน</p><label class="register-only hidden-field">ชื่อที่แสดง<input name="displayName" autocomplete="name" placeholder="เช่น สมชาย ใจดี" /></label><label>ชื่อผู้ใช้<input required name="username" autocomplete="username" placeholder="เช่น somchai" /></label><label>รหัสผ่าน<input required type="password" name="password" autocomplete="current-password" placeholder="อย่างน้อย 8 ตัวอักษร" /></label><button class="primary" id="loginSubmit" type="submit">เข้าสู่ระบบ <span>→</span></button><button class="register-link" id="registerModeBtn" type="button">ยังไม่มีบัญชี? สมัครผู้ใช้งาน</button><div class="login-error" id="loginError"></div></form>
   </section>
   <div class="app-shell">
     <aside class="sidebar">

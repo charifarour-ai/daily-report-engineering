@@ -38,6 +38,9 @@ dialog { border: 0; border-radius: 14px; padding: 0; width: min(720px, calc(100%
 .login-panel .primary { width: 100%; margin-top: 26px; display: flex; justify-content: space-between; align-items: center; }
 .login-panel .primary span { font-size: 21px; }
 .login-error { color: #c65243; font-size: 12px; min-height: 18px; margin-top: 12px; }
+.hidden-field { display: none; }
+.register-link { width: 100%; border: 0; background: transparent; color: #5c817d; cursor: pointer; font: 500 12px 'IBM Plex Sans Thai'; padding: 14px 0 0; }
+.register-link:hover { color: var(--orange); }
 .app-shell.locked { display: none; }
 .export-button, .logout-button { border: 1px solid transparent; border-radius: 8px; cursor: pointer; font: 600 13px 'IBM Plex Sans Thai'; transition: .2s ease; }
 .export-button { background: #fff; border-color: var(--line); color: #48616b; padding: 11px 15px; }

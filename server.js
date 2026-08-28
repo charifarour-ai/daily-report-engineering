@@ -68,6 +68,15 @@ const server = http.createServer(async (req, res) => {
       return sendJson(res, 200, { user: currentUser({ headers: { cookie: `daily_report_session=${token}` } }) });
     } catch (error) { return sendJson(res, 400, { error: error.message }); }
   }
+  if (url.pathname === '/api/auth/register' && req.method === 'POST') {
+    try {
+      const input = await body(req); const username = String(input.username || '').trim().toLowerCase(); const password = String(input.password || ''); const displayName = String(input.displayName || '').trim();
+      if (!username || !displayName || password.length < 8) return sendJson(res, 400, { error: 'กรุณากรอกข้อมูลให้ครบ และรหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร' });
+      const users = readUsers(); if (users.some(item => item.username === username)) return sendJson(res, 409, { error: 'ชื่อผู้ใช้นี้มีอยู่แล้ว' });
+      const salt = crypto.randomBytes(16).toString('hex'); const user = { id: `usr-${crypto.randomUUID().slice(0, 8)}`, username, displayName, role: 'engineer', salt, passwordHash: hashPassword(password, salt) }; users.push(user); fs.writeFileSync(usersFile, JSON.stringify(users, null, 2));
+      return sendJson(res, 201, { id: user.id, username: user.username, displayName: user.displayName, role: user.role });
+    } catch (error) { return sendJson(res, 400, { error: error.message }); }
+  }
   if (url.pathname === '/api/auth/logout' && req.method === 'POST') { const token = cookies(req).daily_report_session; sessions.delete(token); res.setHeader('Set-Cookie', 'daily_report_session=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0'); return sendJson(res, 200, { ok: true }); }
   if (url.pathname === '/api/users' && req.method === 'POST') {
      const authenticatedUser = requireUser(req, res); if (!authenticatedUser) return;
