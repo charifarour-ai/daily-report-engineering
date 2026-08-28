@@ -2,6 +2,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const https = require('https');
 
 const PORT = process.env.PORT || 3030;
 const root = __dirname;
@@ -17,6 +18,34 @@ function validate(input) {
   const required = ['date', 'project', 'supervisor', 'workDone', 'tomorrow'];
   return required.filter(field => !String(input[field] || '').trim());
 }
+function lineMessage(report) {
+  return [
+    'แจ้งเตือน Daily Report งานวิศวกรรม',
+    `วันที่: ${report.date}`,
+    `โครงการ: ${report.project}`,
+    `สถานที่: ${report.location || '-'}`,
+    `ผู้ควบคุมงาน: ${report.supervisor}`,
+    `ความคืบหน้า: ${report.progress}%`,
+    `กำลังคน: ${report.manpower} คน`,
+    `งานวันนี้: ${report.workDone}`,
+    `ปัญหา: ${report.issues || '-'}`,
+    `แผนพรุ่งนี้: ${report.tomorrow}`
+  ].join('\n');
+}
+function notifyLine(report) {
+  const token = process.env.LINE_CHANNEL_ACCESS_TOKEN;
+  const to = process.env.LINE_TO_ID;
+  if (!token || !to) return Promise.resolve({ sent: false, reason: 'LINE is not configured' });
+  const payload = JSON.stringify({ to, messages: [{ type: 'text', text: lineMessage(report) }] });
+  return new Promise(resolve => {
+    const request = https.request({ hostname: 'api.line.me', path: '/v2/bot/message/push', method: 'POST', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(payload) } }, response => {
+      response.resume();
+      resolve({ sent: response.statusCode >= 200 && response.statusCode < 300, status: response.statusCode });
+    });
+    request.on('error', error => resolve({ sent: false, reason: error.message }));
+    request.write(payload); request.end();
+  });
+}
 
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`);
@@ -26,7 +55,7 @@ const server = http.createServer(async (req, res) => {
       const input = await body(req); const missing = validate(input);
       if (missing.length) return sendJson(res, 400, { error: `กรุณากรอก: ${missing.join(', ')}` });
       const reports = readReports(); const report = { id: `rpt-${crypto.randomUUID().slice(0, 8)}`, ...input, progress: Number(input.progress) || 0, manpower: Number(input.manpower) || 0, createdAt: new Date().toISOString() };
-      reports.push(report); saveReports(reports); return sendJson(res, 201, report);
+      reports.push(report); saveReports(reports); notifyLine(report); return sendJson(res, 201, report);
     } catch (error) { return sendJson(res, 400, { error: error.message }); }
   }
   const match = url.pathname.match(/^\/api\/reports\/([^/]+)$/);
