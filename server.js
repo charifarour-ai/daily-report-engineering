@@ -43,16 +43,21 @@ function setSessionCookie(res, token, secure) { res.setHeader('Set-Cookie', `dai
 function requireUser(req, res) { const user = currentUser(req); if (!user) { sendJson(res, 401, { error: 'กรุณาเข้าสู่ระบบก่อนใช้งาน' }); return null; } return user; }
 function lineMessage(report) {
   return [
-    'แจ้งเตือน Daily Report งานวิศวกรรม',
-    `วันที่: ${report.date}`,
-    `โครงการ: ${report.project}`,
-    `สถานที่: ${report.location || '-'}`,
-    `ผู้ควบคุมงาน: ${report.supervisor}`,
-    `ความคืบหน้า: ${report.progress}%`,
-    `กำลังคน: ${report.manpower} คน`,
-    `งานวันนี้: ${report.workDone}`,
-    `ปัญหา: ${report.issues || '-'}`,
-    `แผนพรุ่งนี้: ${report.tomorrow}`
+    '📋 แจ้งเตือนรายงานหน้างาน (ใหม่)',
+    '━━━━━━━━━━━━━━',
+    `📅 วันที่: ${report.date}`,
+    `🏗️ โครงการ: ${report.project}`,
+    `📍 สถานที่: ${report.location || '-'}`,
+    `👷 ผู้ควบคุมงาน: ${report.supervisor}`,
+    `👤 บันทึกโดย: ${report.author || '-'}`,
+    `📊 สถานะ: ${report.status === 'completed' ? 'เสร็จสิ้น' : report.status === 'planned' ? 'วางแผน' : 'กำลังดำเนินการ'}`,
+    `📈 ความคืบหน้า: ${report.progress}%`,
+    `👥 กำลังคน: ${report.manpower} คน`,
+    `☀️ สภาพอากาศ: ${report.weather || '-'}`,
+    '━━━━━━━━━━━━━━',
+    `🛠️ งานวันนี้:\n${report.workDone}`,
+    `⚠️ ปัญหา: ${report.issues || 'ไม่มี'}`,
+    `🔜 แผนพรุ่งนี้:\n${report.tomorrow}`
   ].join('\n');
 }
 function notifyLine(report) {
@@ -136,10 +141,10 @@ const server = http.createServer(async (req, res) => {
   if (url.pathname === '/api/reports' && req.method === 'POST') {
     try {
       if (!requireUser(req, res)) return;
-      const input = await body(req); const missing = validate(input);
+      const actor = currentUser(req); const input = await body(req); const missing = validate(input);
       if (missing.length) return sendJson(res, 400, { error: `กรุณากรอก: ${missing.join(', ')}` });
       if (input.image && (typeof input.image !== 'string' || input.image.length > 2000000)) return sendJson(res, 400, { error: 'แนบรูปได้สูงสุดประมาณ 1.5 MB ต่อไฟล์' });
-      const reports = readReports(); const report = { id: `rpt-${crypto.randomUUID().slice(0, 8)}`, ...input, progress: Number(input.progress) || 0, manpower: Number(input.manpower) || 0, createdAt: new Date().toISOString() };
+      const reports = readReports(); const report = { id: `rpt-${crypto.randomUUID().slice(0, 8)}`, ...input, author: actor ? actor.displayName : input.author || 'วิศวกร', progress: Number(input.progress) || 0, manpower: Number(input.manpower) || 0, createdAt: new Date().toISOString() };
       reports.push(report); saveReports(reports); notifyLine(report); return sendJson(res, 201, report);
     } catch (error) { return sendJson(res, 400, { error: error.message }); }
   }
