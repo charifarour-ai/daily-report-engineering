@@ -1,0 +1,17 @@
+{
+  "name": "Daily Report | Engineering",
+  "short_name": "Daily Report",
+  "description": "ระบบรายงานหน้างานวิศวกรรม รวมความคืบหน้า ความปลอดภัย และแผนงานของทุกโครงการ",
+  "lang": "th",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0d1220",
+  "theme_color": "#0d1220",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

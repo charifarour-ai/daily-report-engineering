@@ -19,7 +19,7 @@ if (!fs.existsSync(path.join(root, 'reports.json')) && !fs.existsSync(path.join(
 const dataFile = fs.existsSync(path.join(root, 'reports.json')) ? path.join(root, 'reports.json') : path.join(root, 'data', 'reports.json');
 const usersFile = fs.existsSync(path.join(root, 'users.json')) ? path.join(root, 'users.json') : path.join(root, 'data', 'users.json');
 const publicDir = fs.existsSync(path.join(root, 'public')) ? path.join(root, 'public') : root;
-const mimeTypes = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.json': 'application/json; charset=utf-8' };
+const mimeTypes = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.json': 'application/json; charset=utf-8', '.webmanifest': 'application/manifest+json; charset=utf-8', '.png': 'image/png', '.svg': 'image/svg+xml', '.ico': 'image/x-icon' };
 const sessions = new Map();
 
 function readReports() { return JSON.parse(fs.readFileSync(dataFile, 'utf8')); }

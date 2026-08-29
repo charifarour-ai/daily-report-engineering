@@ -4,6 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Daily Report | Engineering</title>
+  <meta name="theme-color" content="#0d1220" />
+  <meta name="description" content="ระบบรายงานหน้างานวิศวกรรม รวมความคืบหน้า ความปลอดภัย และแผนงานของทุกโครงการ" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" type="image/png" href="/icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
@@ -54,5 +61,6 @@
   <dialog id="summaryDialog"><div class="modal-head"><div><span class="label">WORK SUMMARY</span><h2>สรุปรายงานการปฏิบัติงาน</h2></div><button type="button" class="close" id="closeSummaryDialog">×</button></div><div class="summary-popup-body"><div class="summary-popup-grid" id="summaryPopupGrid"></div><div class="summary-popup-latest" id="summaryPopupLatest"></div><div class="summary-popup-note">ข้อมูล ณ วันนี้ · กด × หรือปุ่มปิดเพื่อดูรายงานทั้งหมด</div></div><div class="form-actions"><button type="button" class="primary" id="closeSummaryBtn">ปิดและดูรายงาน</button></div></dialog>
   <dialog id="userDialog"><form method="dialog" id="userForm"><div class="modal-head"><div><span class="label">MEMBER</span><h2 id="userFormTitle">เพิ่มผู้ใช้</h2></div><button type="button" class="close" id="closeUserDialog">×</button></div><div class="form-grid"><label>ชื่อที่แสดง<input name="displayName" required placeholder="เช่น สมชาย ใจดี" /></label><label>ชื่อผู้ใช้<input name="username" autocapitalize="none" placeholder="เช่น somchai" /></label><label>สิทธิ์<select name="role"><option value="engineer">วิศวกร</option><option value="admin">ผู้ดูแลระบบ</option></select></label><label>รหัสผ่าน (อย่างน้อย 8 ตัว)<input type="password" name="password" placeholder="เว้นว่างถ้าไม่เปลี่ยน" /></label></div><div class="form-actions"><button type="button" class="secondary" id="cancelUserBtn">ยกเลิก</button><button class="primary" type="submit">บันทึก</button></div></form></dialog>
   <div id="toast" class="toast"></div><script src="/app.js"></script>
+  <script>if ('serviceWorker' in navigator) { window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {})); }</script>
 </body>
 </html>
