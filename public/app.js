@@ -56,7 +56,22 @@ function showApp(user) { state.user = user; loginScreen.classList.add('hidden');
 async function loadUsers() { const response = await fetch('/api/users'); if (!response.ok) return; state.users = await response.json(); renderUsers(); }
 function renderUsers() { const list = $('#usersList'); list.innerHTML = state.users.length ? state.users.map(u => `<div class="user-row"><div class="user-avatar">${escapeHtml((u.displayName || '?').slice(0,1))}</div><div><strong>${escapeHtml(u.displayName)}</strong><small>@${escapeHtml(u.username)} · ${u.role === 'admin' ? 'ผู้ดูแลระบบ' : 'วิศวกร'}</small></div><div class="user-actions"><button class="small-btn" type="button" data-edit-user="${u.id}">แก้ไข</button><button class="small-btn danger" type="button" data-del-user="${u.id}">ลบ</button></div></div>`).join('') : '<div class="empty">ยังไม่มีผู้ใช้</div>'; }
 const adminSection = $('#admin');
-$('#adminNavBtn').addEventListener('click', event => { event.preventDefault(); document.querySelector('#dashboard').hidden = true; adminSection.hidden = false; loadUsers(); });
+const dashboardSection = $('#dashboard');
+function showSection(id) {
+  dashboardSection.hidden = id !== 'dashboard';
+  adminSection.hidden = id !== 'admin';
+  document.querySelectorAll('.sidebar nav a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+  if (id === 'admin') loadUsers();
+}
+document.querySelectorAll('.sidebar nav a').forEach(a => {
+  a.addEventListener('click', event => {
+    event.preventDefault();
+    const target = a.getAttribute('href').slice(1); // dashboard | reports | admin
+    showSection(target === 'reports' ? 'dashboard' : target);
+    if (target === 'reports') { const r = document.querySelector('#reports'); if (r) r.scrollIntoView({ behavior: 'smooth' }); }
+    else window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+});
 $('#addUserBtn').addEventListener('click', () => openUserForm());
 const userDialog = $('#userDialog'); const userForm = $('#userForm'); let editingUserId = null;
 function openUserForm(user) { editingUserId = user?.id || null; $('#userFormTitle').textContent = user ? 'แก้ไขผู้ใช้' : 'เพิ่มผู้ใช้'; userForm.reset(); userForm.username.disabled = Boolean(user); userForm.username.required = !user; if (user) { userForm.displayName.value = user.displayName; userForm.role.value = user.role; userForm.username.value = user.username; } userDialog.showModal(); }
