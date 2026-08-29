@@ -69,7 +69,6 @@ document.querySelectorAll('.sidebar nav a').forEach(a => {
     const target = a.getAttribute('href').slice(1); // dashboard | reports | admin
     showSection(target === 'reports' ? 'dashboard' : target);
     if (target === 'reports') {
-      showSummaryPopup();
       const r = document.querySelector('#reports'); if (r) r.scrollIntoView({ behavior: 'smooth' });
     }
     else window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -102,6 +101,11 @@ function showSummaryPopup() {
 }
 $('#closeSummaryDialog').addEventListener('click', () => summaryDialog.close());
 $('#closeSummaryBtn').addEventListener('click', () => summaryDialog.close());
+const reportsTitle = $('#reportsTitle');
+if (reportsTitle) {
+  reportsTitle.addEventListener('click', () => showSummaryPopup());
+  reportsTitle.addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); showSummaryPopup(); } });
+}
 $('#addUserBtn').addEventListener('click', () => openUserForm());
 const userDialog = $('#userDialog'); const userForm = $('#userForm'); let editingUserId = null;
 function openUserForm(user) { editingUserId = user?.id || null; $('#userFormTitle').textContent = user ? 'แก้ไขผู้ใช้' : 'เพิ่มผู้ใช้'; userForm.reset(); userForm.username.disabled = Boolean(user); userForm.username.required = !user; if (user) { userForm.displayName.value = user.displayName; userForm.role.value = user.role; userForm.username.value = user.username; } userDialog.showModal(); }

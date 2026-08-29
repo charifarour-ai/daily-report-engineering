@@ -79,6 +79,9 @@ dialog { border: 0; border-radius: 14px; padding: 0; width: min(720px, calc(100%
 .small-btn { border: 1px solid var(--line); background: #fff; color: #48616b; border-radius: 6px; padding: 6px 12px; font: 600 12px 'IBM Plex Sans Thai'; cursor: pointer; }
 .small-btn:hover { border-color: #a9c3bd; }
 .small-btn.danger { color: #c65243; border-color: #f1cfc8; }
+.section-title-btn { cursor: pointer; border-radius: 10px; padding: 2px 8px; margin-left: -8px; transition: background .2s ease; }
+.section-title-btn:hover { background: #e5eeec; }
+.section-title-btn h2 small { font: 600 11px 'IBM Plex Sans Thai'; color: var(--orange); vertical-align: middle; margin-left: 6px; }
 #summaryDialog { width: min(520px, calc(100% - 40px)); border: 1px solid var(--line); border-radius: 16px; padding: 0; box-shadow: 0 30px 70px #132a3533; }
 #summaryDialog::backdrop { background: #132a3566; backdrop-filter: blur(2px); }
 #summaryDialog .modal-head { padding: 24px 26px 0; }
