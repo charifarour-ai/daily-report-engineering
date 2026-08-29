@@ -68,10 +68,40 @@ document.querySelectorAll('.sidebar nav a').forEach(a => {
     event.preventDefault();
     const target = a.getAttribute('href').slice(1); // dashboard | reports | admin
     showSection(target === 'reports' ? 'dashboard' : target);
-    if (target === 'reports') { const r = document.querySelector('#reports'); if (r) r.scrollIntoView({ behavior: 'smooth' }); }
+    if (target === 'reports') {
+      showSummaryPopup();
+      const r = document.querySelector('#reports'); if (r) r.scrollIntoView({ behavior: 'smooth' });
+    }
     else window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 });
+const summaryDialog = $('#summaryDialog');
+function showSummaryPopup() {
+  const reports = state.reports;
+  const total = reports.length;
+  const inProgress = reports.filter(r => r.status === 'in-progress').length;
+  const completed = reports.filter(r => r.status === 'completed').length;
+  const planned = reports.filter(r => r.status === 'planned').length;
+  const today = new Date().toISOString().slice(0, 10);
+  const todaysReports = reports.filter(r => r.date === today);
+  const manpowerToday = todaysReports.reduce((sum, r) => sum + Number(r.manpower || 0), 0);
+  const latest = reports.slice().sort((a, b) => (b.date || '').localeCompare(a.date || ''))[0];
+  const items = [
+    { label: 'รายงานทั้งหมด', value: total, color: 'var(--navy)' },
+    { label: 'กำลังดำเนินการ', value: inProgress, color: 'var(--orange)' },
+    { label: 'เสร็จสิ้น', value: completed, color: 'var(--green)' },
+    { label: 'วางแผน', value: planned, color: 'var(--blue)' },
+    { label: 'รายงานวันนี้', value: todaysReports.length, color: 'var(--violet)' },
+    { label: 'กำลังคนวันนี้', value: manpowerToday + ' คน', color: 'var(--violet)' }
+  ];
+  $('#summaryPopupGrid').innerHTML = items.map(item => `<div class="summary-popup-item"><span class="summary-popup-value" style="color:${item.color}">${item.value}</span><small>${item.label}</small></div>`).join('');
+  $('#summaryPopupLatest').innerHTML = latest
+    ? `<span class="label">LATEST REPORT</span><h3>${escapeHtml(latest.project)}</h3><p>${escapeHtml(latest.workDone)}</p><small>${escapeHtml(latest.date)} · ${latest.status === 'completed' ? 'เสร็จสิ้น' : latest.status === 'planned' ? 'วางแผน' : 'กำลังดำเนินการ'} · ${Number(latest.progress)||0}%</small>`
+    : '<div class="empty">ยังไม่มีรายงาน</div>';
+  summaryDialog.showModal();
+}
+$('#closeSummaryDialog').addEventListener('click', () => summaryDialog.close());
+$('#closeSummaryBtn').addEventListener('click', () => summaryDialog.close());
 $('#addUserBtn').addEventListener('click', () => openUserForm());
 const userDialog = $('#userDialog'); const userForm = $('#userForm'); let editingUserId = null;
 function openUserForm(user) { editingUserId = user?.id || null; $('#userFormTitle').textContent = user ? 'แก้ไขผู้ใช้' : 'เพิ่มผู้ใช้'; userForm.reset(); userForm.username.disabled = Boolean(user); userForm.username.required = !user; if (user) { userForm.displayName.value = user.displayName; userForm.role.value = user.role; userForm.username.value = user.username; } userDialog.showModal(); }
