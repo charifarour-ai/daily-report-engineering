@@ -18,7 +18,7 @@
     <aside class="sidebar">
       <div class="brand"><span class="brand-mark">DR</span><span><strong>Daily Report</strong><small>Engineering Hub</small></span></div>
       <nav><a class="active" href="#dashboard"><span>▦</span> ภาพรวมโครงการ</a><a href="#reports"><span>▤</span> รายงานประจำวัน</a><a id="adminNavBtn" href="#admin" hidden><span>⚙</span> จัดการทีม</a></nav>
-      <div class="sidebar-foot"><div class="status-dot"></div><div><small>ระบบพร้อมใช้งาน</small><strong>Local workspace</strong><small class="line-status" id="lineStatus"></small></div></div>
+      <div class="sidebar-foot"><div class="status-dot"></div><div><small>ระบบพร้อมใช้งาน</small><strong>Local workspace</strong></div></div>
       <button class="logout-button" id="logoutBtn" type="button"><span>↪</span> ออกจากระบบ</button>
     </aside>
     <main class="main-content">
@@ -41,11 +41,6 @@
       <section id="admin" class="admin-panel" hidden>
         <div class="section-head"><div><span class="label">TEAM MANAGEMENT</span><h2>จัดการทีมและผู้ใช้งาน</h2></div><button class="primary" id="addUserBtn" type="button">＋ เพิ่มผู้ใช้</button></div>
         <div class="admin-row">
-          <div class="admin-card line-card">
-            <div class="summary-header"><div><span class="label">LINE NOTIFY</span><h2>การแจ้งเตือน LINE</h2></div></div>
-            <p id="lineDetail" class="line-detail">กำลังตรวจสอบ...</p>
-            <button class="secondary" id="lineTestBtn" type="button">ส่งข้อความทดสอบ</button>
-          </div>
           <div class="admin-card users-card">
             <div class="summary-header"><div><span class="label">MEMBERS</span><h2>รายชื่อผู้ใช้งาน</h2></div></div>
             <div class="users-list" id="usersList"><div class="empty">กำลังโหลด...</div></div>

@@ -67,11 +67,9 @@ dialog { border: 0; border-radius: 14px; padding: 0; width: min(720px, calc(100%
 .image-preview { margin-top: 10px; position: relative; }
 .image-preview img { max-width: 240px; max-height: 160px; border-radius: 8px; border: 1px solid var(--line); display: block; }
 .remove-image { margin-top: 8px; border: 0; background: #fbe9e5; color: #c65243; border-radius: 6px; padding: 6px 12px; font: 600 12px 'IBM Plex Sans Thai'; cursor: pointer; }
-.line-status { color: #f6a16f; margin-top: 4px; font-size: 11px; }
 .admin-panel { display: grid; gap: 22px; }
 .admin-row { display: grid; grid-template-columns: 340px 1fr; gap: 20px; align-items: start; }
 .admin-card { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 24px; box-shadow: 0 8px 26px #1729360d; }
-.line-detail { color: var(--muted); font-size: 13px; line-height: 1.7; margin: 14px 0 18px; }
 .users-list { display: grid; gap: 10px; margin-top: 16px; }
 .user-row { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; }
 .user-avatar { width: 36px; height: 36px; border-radius: 50%; background: #e5eeec; color: #3c6b62; display: grid; place-items: center; font: 600 15px 'IBM Plex Sans Thai'; flex: none; }

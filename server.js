@@ -2,7 +2,6 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
-const https = require('https');
 
 const PORT = process.env.PORT || 3030;
 const root = __dirname;
@@ -34,46 +33,12 @@ function validate(input) {
 function readUsers() { return JSON.parse(fs.readFileSync(usersFile, 'utf8')); }
 function saveUsers(users) { fs.writeFileSync(usersFile, JSON.stringify(users, null, 2)); }
 function sanitizeUser(user) { return { id: user.id, username: user.username, displayName: user.displayName, role: user.role }; }
-function lineInfo() { return { configured: Boolean(process.env.LINE_CHANNEL_ACCESS_TOKEN && process.env.LINE_TO_ID), to: process.env.LINE_TO_ID || null }; }
 function hashPassword(password, salt) { return crypto.scryptSync(password, Buffer.from(salt, 'hex'), 64).toString('hex'); }
 function passwordMatches(password, user) { const actual = Buffer.from(hashPassword(password, user.salt), 'hex'); const expected = Buffer.from(user.passwordHash, 'hex'); return actual.length === expected.length && crypto.timingSafeEqual(actual, expected); }
 function cookies(req) { return Object.fromEntries((req.headers.cookie || '').split(';').filter(Boolean).map(item => { const [key, ...value] = item.trim().split('='); return [key, decodeURIComponent(value.join('='))]; })); }
 function currentUser(req) { const session = sessions.get(cookies(req).daily_report_session); return session && session.expiresAt > Date.now() ? session.user : null; }
 function setSessionCookie(res, token, secure) { res.setHeader('Set-Cookie', `daily_report_session=${encodeURIComponent(token)}; HttpOnly; SameSite=Lax; Path=/; Max-Age=28800${secure ? '; Secure' : ''}`); }
 function requireUser(req, res) { const user = currentUser(req); if (!user) { sendJson(res, 401, { error: 'กรุณาเข้าสู่ระบบก่อนใช้งาน' }); return null; } return user; }
-function lineMessage(report) {
-  return [
-    '📋 แจ้งเตือนรายงานหน้างาน (ใหม่)',
-    '━━━━━━━━━━━━━━',
-    `📅 วันที่: ${report.date}`,
-    `🏗️ โครงการ: ${report.project}`,
-    `📍 สถานที่: ${report.location || '-'}`,
-    `👷 ผู้ควบคุมงาน: ${report.supervisor}`,
-    `👤 บันทึกโดย: ${report.author || '-'}`,
-    `📊 สถานะ: ${report.status === 'completed' ? 'เสร็จสิ้น' : report.status === 'planned' ? 'วางแผน' : 'กำลังดำเนินการ'}`,
-    `📈 ความคืบหน้า: ${report.progress}%`,
-    `👥 กำลังคน: ${report.manpower} คน`,
-    `☀️ สภาพอากาศ: ${report.weather || '-'}`,
-    '━━━━━━━━━━━━━━',
-    `🛠️ งานวันนี้:\n${report.workDone}`,
-    `⚠️ ปัญหา: ${report.issues || 'ไม่มี'}`,
-    `🔜 แผนพรุ่งนี้:\n${report.tomorrow}`
-  ].join('\n');
-}
-function notifyLine(report) {
-  const token = process.env.LINE_CHANNEL_ACCESS_TOKEN;
-  const to = process.env.LINE_TO_ID;
-  if (!token || !to) return Promise.resolve({ sent: false, reason: 'LINE is not configured' });
-  const payload = JSON.stringify({ to, messages: [{ type: 'text', text: lineMessage(report) }] });
-  return new Promise(resolve => {
-    const request = https.request({ hostname: 'api.line.me', path: '/v2/bot/message/push', method: 'POST', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(payload) } }, response => {
-      response.resume();
-      resolve({ sent: response.statusCode >= 200 && response.statusCode < 300, status: response.statusCode });
-    });
-    request.on('error', error => resolve({ sent: false, reason: error.message }));
-    request.write(payload); request.end();
-  });
-}
 
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`);
@@ -97,15 +62,6 @@ const server = http.createServer(async (req, res) => {
     } catch (error) { return sendJson(res, 400, { error: error.message }); }
   }
   if (url.pathname === '/api/auth/logout' && req.method === 'POST') { const token = cookies(req).daily_report_session; sessions.delete(token); res.setHeader('Set-Cookie', 'daily_report_session=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0'); return sendJson(res, 200, { ok: true }); }
-  if (url.pathname === '/api/line/status' && req.method === 'GET') { if (!requireUser(req, res)) return; return sendJson(res, 200, { ...lineInfo(), autoNotify: true }); }
-  if (url.pathname === '/api/line/test' && req.method === 'POST') {
-    const authenticatedUser = requireUser(req, res); if (!authenticatedUser) return;
-    if (authenticatedUser.role !== 'admin') return sendJson(res, 403, { error: 'เฉพาะผู้ดูแลระบบเท่านั้น' });
-    if (!lineInfo().configured) return sendJson(res, 400, { error: 'LINE ยังไม่ได้ตั้งค่า (ขาด LINE_CHANNEL_ACCESS_TOKEN หรือ LINE_TO_ID)' });
-    const result = await notifyLine({ date: new Date().toISOString().slice(0,10), project: 'ทดสอบการแจ้งเตือน', location: 'Daily Report Engineering', supervisor: authenticatedUser.displayName, progress: 0, manpower: 0, workDone: 'ข้อความทดสอบจากระบบ Daily Report', issues: '-', tomorrow: '-' });
-    if (result.sent) return sendJson(res, 200, { ok: true, status: result.status });
-    return sendJson(res, 502, { error: `ส่ง LINE ไม่สำเร็จ (${result.status || result.reason || 'unknown'})` });
-  }
   if (url.pathname === '/api/users' && req.method === 'POST') {
      const authenticatedUser = requireUser(req, res); if (!authenticatedUser) return;
      if (authenticatedUser.role !== 'admin') return sendJson(res, 403, { error: 'เฉพาะผู้ดูแลระบบเท่านั้น' });
@@ -145,7 +101,7 @@ const server = http.createServer(async (req, res) => {
       if (missing.length) return sendJson(res, 400, { error: `กรุณากรอก: ${missing.join(', ')}` });
       if (input.image && (typeof input.image !== 'string' || input.image.length > 2000000)) return sendJson(res, 400, { error: 'แนบรูปได้สูงสุดประมาณ 1.5 MB ต่อไฟล์' });
       const reports = readReports(); const report = { id: `rpt-${crypto.randomUUID().slice(0, 8)}`, ...input, author: actor ? actor.displayName : input.author || 'วิศวกร', progress: Number(input.progress) || 0, manpower: Number(input.manpower) || 0, createdAt: new Date().toISOString() };
-      reports.push(report); saveReports(reports); notifyLine(report); return sendJson(res, 201, report);
+      reports.push(report); saveReports(reports); return sendJson(res, 201, report);
     } catch (error) { return sendJson(res, 400, { error: error.message }); }
   }
   const match = url.pathname.match(/^\/api\/reports\/([^/]+)$/);
