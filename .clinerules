@@ -1,0 +1,25 @@
+# Cline Rules for Daily Report Engineering
+
+## Project shape
+
+- This is a Node.js 18+ application with a single HTTP server and a browser frontend.
+- `server.js` owns routing, authentication, in-memory sessions, JSON persistence, and LINE notifications.
+- `public/index.html`, `public/app.js`, and `public/styles.css` make up the frontend.
+- `data/reports.json` and `data/users.json` are runtime data. Do not rewrite or seed them unless the task explicitly requires it.
+- Read [README.md](README.md) for deployment, storage, and LINE configuration details.
+
+## Working conventions
+
+- Use the existing dependency-free Node.js and browser APIs unless a dependency is clearly necessary.
+- Keep frontend behavior in `public/app.js`, presentation in `public/styles.css`, and API/domain behavior in `server.js`.
+- Preserve the existing Thai user-facing language and current visual system when changing the UI.
+- Keep edits focused; do not reformat unrelated code or change deployment configuration without a direct need.
+- Never expose passwords, password hashes, salts, session tokens, or LINE credentials in responses, logs, screenshots, or committed files.
+
+## Validation
+
+- Start locally with `npm start` and use port `3030` unless `PORT` is set.
+- Before finishing server changes, run `node --check server.js`; for frontend JavaScript, run `node --check public/app.js`.
+- For API changes, verify unauthenticated requests, the intended authenticated role, persistence behavior, and error responses.
+- Treat LINE notification failure as non-blocking: report creation must still succeed when LINE is unavailable or unconfigured.
+- Do not claim tests passed unless they were actually run; this project currently has no test script.
